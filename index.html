@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trabalho Final - Computação Gráfica</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+      }
+      .container {
+        display: flex;
+        gap: 20px;
+      }
+      .controls {
+        background-color: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-width: 250px;
+      }
+      .control-group {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+      }
+      .control-group:last-child {
+        border-bottom: none;
+      }
+      .control-group h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 14px;
+      }
+      label {
+        display: block;
+        margin: 8px 0 4px 0;
+        font-size: 12px;
+        color: #666;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+      input[type="number"] {
+        width: 80px;
+        padding: 4px;
+        font-size: 12px;
+      }
+      button {
+        padding: 8px 15px;
+        margin: 5px 5px 5px 0;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .info {
+        font-size: 11px;
+        color: #888;
+        margin-top: 5px;
+      }
+      canvas {
+        border: 2px solid #333;
+        border-radius: 4px;
+        background-color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Trabalho Final - Computação Gráfica</h1>
+    <div class="container">
+      <div class="controls">
+        <div class="control-group">
+          <h3>Câmera</h3>
+          <label
+            >Rotar Horizontal:
+            <input
+              type="range"
+              id="camera-rotate-y"
+              min="-180"
+              max="180"
+              value="45"
+          /></label>
+          <label
+            >Rotar Vertical:
+            <input
+              type="range"
+              id="camera-rotate-x"
+              min="-90"
+              max="90"
+              value="30"
+          /></label>
+          <label
+            >Distância:
+            <input
+              type="range"
+              id="camera-distance"
+              min="5"
+              max="30"
+              value="20"
+          /></label>
+          <label
+            >Transladar X:
+            <input
+              type="range"
+              id="camera-translate-x"
+              min="-10"
+              max="10"
+              value="0"
+              step="0.1"
+          /></label>
+          <label
+            >Transladar Y:
+            <input
+              type="range"
+              id="camera-translate-y"
+              min="-10"
+              max="10"
+              value="0"
+              step="0.1"
+          /></label>
+          <button id="reset-camera">Resetar Câmera</button>
+        </div>
+
+        <div class="control-group">
+          <h3>Projeção Perspectiva</h3>
+          <label
+            >FOV: <input type="range" id="fov" min="30" max="120" value="45"
+          /></label>
+          <label
+            >Near Plane:
+            <input
+              type="range"
+              id="near"
+              min="0.1"
+              max="5"
+              value="0.1"
+              step="0.1"
+          /></label>
+          <label
+            >Far Plane:
+            <input type="range" id="far" min="50" max="200" value="100"
+          /></label>
+          <label
+            >Aspect Ratio:
+            <input
+              type="range"
+              id="aspect"
+              min="0.5"
+              max="2"
+              value="1"
+              step="0.1"
+          /></label>
+        </div>
+
+        <div class="control-group">
+          <h3>Luz 1</h3>
+          <label
+            >Posição X:
+            <input
+              type="range"
+              id="light1-x"
+              min="-10"
+              max="10"
+              value="5"
+              step="0.1"
+          /></label>
+          <label
+            >Posição Y:
+            <input
+              type="range"
+              id="light1-y"
+              min="-10"
+              max="10"
+              value="5"
+              step="0.1"
+          /></label>
+          <label
+            >Posição Z:
+            <input
+              type="range"
+              id="light1-z"
+              min="-10"
+              max="10"
+              value="5"
+              step="0.1"
+          /></label>
+          <label
+            >Intensidade:
+            <input
+              type="range"
+              id="light1-intensity"
+              min="0"
+              max="2"
+              value="1"
+              step="0.1"
+          /></label>
+          <label
+            >Cor R:
+            <input
+              type="range"
+              id="light1-r"
+              min="0"
+              max="1"
+              value="1"
+              step="0.1"
+          /></label>
+          <label
+            >Cor G:
+            <input
+              type="range"
+              id="light1-g"
+              min="0"
+              max="1"
+              value="1"
+              step="0.1"
+          /></label>
+          <label
+            >Cor B:
+            <input
+              type="range"
+              id="light1-b"
+              min="0"
+              max="1"
+              value="1"
+              step="0.1"
+          /></label>
+        </div>
+
+        <div class="control-group">
+          <h3>Luz 2</h3>
+          <label
+            >Posição X:
+            <input
+              type="range"
+              id="light2-x"
+              min="-10"
+              max="10"
+              value="-5"
+              step="0.1"
+          /></label>
+          <label
+            >Posição Y:
+            <input
+              type="range"
+              id="light2-y"
+              min="-10"
+              max="10"
+              value="5"
+              step="0.1"
+          /></label>
+          <label
+            >Posição Z:
+            <input
+              type="range"
+              id="light2-z"
+              min="-10"
+              max="10"
+              value="-5"
+              step="0.1"
+          /></label>
+          <label
+            >Intensidade:
+            <input
+              type="range"
+              id="light2-intensity"
+              min="0"
+              max="2"
+              value="0.8"
+              step="0.1"
+          /></label>
+          <label
+            >Cor R:
+            <input
+              type="range"
+              id="light2-r"
+              min="0"
+              max="1"
+              value="0.5"
+              step="0.1"
+          /></label>
+          <label
+            >Cor G:
+            <input
+              type="range"
+              id="light2-g"
+              min="0"
+              max="1"
+              value="0.5"
+              step="0.1"
+          /></label>
+          <label
+            >Cor B:
+            <input
+              type="range"
+              id="light2-b"
+              min="0"
+              max="1"
+              value="1"
+              step="0.1"
+          /></label>
+        </div>
+
+        <div class="control-group">
+          <h3>Animações</h3>
+          <label
+            ><input type="checkbox" id="animations-enabled" checked /> Habilitar
+            Animações</label
+          >
+          <div class="info">
+            Todos os objetos animam automaticamente (exceto as luzes)
+          </div>
+        </div>
+      </div>
+
+      <canvas id="gl-canvas" width="800" height="600">
+        Oops ... seu navegador não suporta o elemento HTML5 canvas
+      </canvas>
+    </div>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      attribute vec3 vPosition;
+      attribute vec3 vNormal;
+      attribute vec2 vTexCoord;
+
+      // ATENÇÃO: Matrizes separadas para cálculo correto de iluminação
+      uniform mat4 modelMatrix;
+      uniform mat4 viewMatrix;
+      uniform mat4 projectionMatrix;
+
+      // Matriz normal deve ser baseada na ModelMatrix para corrigir rotação
+      uniform mat3 normalMatrix;
+
+      varying vec3 fPosition; // Posição no mundo
+      varying vec3 fNormal;   // Normal no mundo
+      varying vec2 fTexCoord;
+
+      void main() {
+          // 1. Calcula posição no mundo (World Space)
+          vec4 worldPos = modelMatrix * vec4(vPosition, 1.0);
+          fPosition = vec3(worldPos);
+
+          // 2. Calcula normal no mundo (Garante que a luz não gire junto com o objeto)
+          fNormal = normalize(normalMatrix * vNormal);
+
+          fTexCoord = vTexCoord;
+
+          // 3. Posição final na tela
+          gl_Position = projectionMatrix * viewMatrix * worldPos;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+
+      varying vec3 fPosition;
+      varying vec3 fNormal;
+      varying vec2 fTexCoord;
+
+      uniform vec3 materialAmbient;
+      uniform vec3 materialDiffuse;
+      uniform vec3 materialSpecular;
+      uniform float materialShininess;
+
+      // Luzes em World Space
+      uniform vec3 light1Position;
+      uniform vec3 light1Color;
+      uniform float light1Intensity;
+
+      uniform vec3 light2Position;
+      uniform vec3 light2Color;
+      uniform float light2Intensity;
+
+      // Câmera em World Space
+      uniform vec3 viewPosition;
+
+      uniform bool useTexture;
+      uniform sampler2D uTexture;
+      uniform bool isLight;
+
+      void main() {
+          if (isLight) {
+              gl_FragColor = vec4(materialDiffuse, 1.0);
+              return;
+          }
+
+          vec3 normal = normalize(fNormal);
+
+          // Direção da visão (Câmera - Objeto)
+          vec3 viewDir = normalize(viewPosition - fPosition);
+
+          // --- LUZ 1 ---
+          vec3 lightDir1 = normalize(light1Position - fPosition);
+          float diff1 = max(dot(normal, lightDir1), 0.0);
+
+          vec3 reflectDir1 = reflect(-lightDir1, normal);
+          float spec1 = pow(max(dot(viewDir, reflectDir1), 0.0), materialShininess);
+
+          vec3 ambient1 = materialAmbient * light1Color * light1Intensity;
+          vec3 diffuse1 = materialDiffuse * diff1 * light1Color * light1Intensity;
+          vec3 specular1 = materialSpecular * spec1 * light1Color * light1Intensity;
+
+          // --- LUZ 2 ---
+          vec3 lightDir2 = normalize(light2Position - fPosition);
+          float diff2 = max(dot(normal, lightDir2), 0.0);
+
+          vec3 reflectDir2 = reflect(-lightDir2, normal);
+          float spec2 = pow(max(dot(viewDir, reflectDir2), 0.0), materialShininess);
+
+          vec3 ambient2 = materialAmbient * light2Color * light2Intensity;
+          vec3 diffuse2 = materialDiffuse * diff2 * light2Color * light2Intensity;
+          vec3 specular2 = materialSpecular * spec2 * light2Color * light2Intensity;
+
+          vec3 lighting = ambient1 + diffuse1 + specular1 + ambient2 + diffuse2 + specular2;
+
+          if (useTexture) {
+              vec4 texColor = texture2D(uTexture, fTexCoord);
+              gl_FragColor = vec4(lighting * texColor.rgb, texColor.a);
+          } else {
+              gl_FragColor = vec4(lighting, 1.0);
+          }
+      }
+    </script>
+
+    <script type="text/javascript" src="./Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="./Common/initShaders.js"></script>
+    <script type="text/javascript" src="./Common/MV.js"></script>
+
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>
