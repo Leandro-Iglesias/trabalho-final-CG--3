@@ -40,11 +40,9 @@ var light2 = {
   intensity: 0.8,
 };
 
-// Animações
 var animationsEnabled = true;
 var time = 0;
 
-// Program e uniforms
 var program;
 var modelMatrixLoc, viewMatrixLoc, projectionMatrixLoc, normalMatrixLoc;
 
@@ -56,12 +54,11 @@ var light1PositionLoc, light1ColorLoc, light1IntensityLoc;
 var light2PositionLoc, light2ColorLoc, light2IntensityLoc;
 var viewPositionLoc, useTextureLoc, uTextureLoc, isLightLoc;
 
-// Textura
 var texture;
 
 window.onload = init;
 
-// Funções auxiliares de rotação
+o;
 function rotateX(angle) {
   return rotate(angle, vec3(1, 0, 0));
 }
@@ -72,7 +69,6 @@ function rotateZ(angle) {
   return rotate(angle, vec3(0, 0, 1));
 }
 
-// Classe SceneObject
 function SceneObject(
   vertices,
   normals,
@@ -103,8 +99,6 @@ function SceneObject(
   this.numVertices = vertices.length;
 }
 
-// --- GERAÇÃO DE GEOMETRIA (Sphere, Cube, Torus, Pyramid, Texture) ---
-// (Mantive igual ao anterior, omitindo para economizar espaço, mas deve estar aqui)
 function generateSphere(radius, slices, stacks) {
   var vertices = [];
   var normals = [];
@@ -411,7 +405,6 @@ function init() {
   uTextureLoc = gl.getUniformLocation(program, "uTexture");
   isLightLoc = gl.getUniformLocation(program, "isLight");
 
-  // Textura
   texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
   var checkerboard = createCheckerboardTexture(64);
@@ -854,7 +847,6 @@ function render() {
     gl.uniform1f(materialShininessLoc, obj.material.shininess);
     gl.uniform1i(isLightLoc, false);
 
-    // Textura
     gl.uniform1i(useTextureLoc, obj.hasTexture);
     if (obj.hasTexture) {
       gl.activeTexture(gl.TEXTURE0);
@@ -862,7 +854,6 @@ function render() {
       gl.uniform1i(uTextureLoc, 0);
     }
 
-    // Desenhar
     gl.bindBuffer(gl.ARRAY_BUFFER, obj.vertexBuffer);
     gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
